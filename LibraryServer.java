@@ -20,18 +20,23 @@ public class LibraryServer{
 	ResultSet rs = null;
 	Vector<Object> v = null;
 	List<Map<String,Object>> list = new ArrayList<>();
-	LibraryServer(String bname, int selectedNum) {
+	LibraryResult lr;
+	
+	public void LibraryAct(String bname, int selectedNum) {
 		
 		StringBuilder sql = new StringBuilder();
 		
 	switch (selectedNum) {
-    case 1:
+	case -1:
+		sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_TITLE like '%'||?||'%'");
+        break;
+    case 0:
         sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_TITLE like '%'||?||'%'");
         break;
-    case 2:
+    case 1:
         sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_AUTHOR like '%'||?||'%'");
         break;
-    case 3:
+    case 2:
         sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where PUBLISHER like '%'||?||'%'");
         break;
 }
@@ -74,26 +79,36 @@ public class LibraryServer{
 		}
 	}
 
-	public static void main(String[] args) {
-		
-		LibraryServer ls = new LibraryServer("a", 2);
-		LibraryResult lr = new LibraryResult();
-		for (int s = 0; s<ls.list.size(); s++) {
-		
-		System.out.println(ls.list.get(s));
-		int pubyear = (int) ls.list.get(s).get("pubyear");
-		String author = (String) ls.list.get(s).get("author");
-		String publisher = (String) ls.list.get(s).get("publisher");
-		String title = (String) ls.list.get(s).get("title");
-		String imgurl = (String) ls.list.get(s).get("imgUrl");
-		lr.addDatastoMap(title, author, publisher, pubyear, imgurl);
-		}
-		
-		
+
+
+
+
+
+
+	public List<Map<String,Object>> searchInit(String gotTxt, int checkednum) {
+		this.LibraryAct(gotTxt, checkednum);
+		List<Map<String,Object>> list1 = new ArrayList<Map<String,Object>>();
+		if (lr == null) {
+            lr = new LibraryResult(this); // 최초 호출 시에만 객체 생성
+        }
+		for (int s = 0; s<this.list.size(); s++) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pubyear", (int) this.list.get(s).get("pubyear"));
+		map.put("author", (String) this.list.get(s).get("author"));
+		map.put("publisher", (String) this.list.get(s).get("publisher"));
+		map.put("title", (String) this.list.get(s).get("title"));
+		map.put("imgurl", (String) this.list.get(s).get("imgurl"));
+		list1.add(map);
 		
 	}
+	return list1;
+	}
+		
+		
+	
 
 
 	
 
 }
+
