@@ -1,50 +1,89 @@
 package Library;
 
 import javax.swing.*;
+
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
-public class LibraryResult extends JFrame {
+public class LibraryResult extends JFrame implements ActionListener {
     private DefaultTableModel dtm;
     private JTable jt;
-    private List<Map<String, Object>> DataforTable = new ArrayList<>();
+    private Object[][] DataforTable = {};
     String[] header = {"Title", "Author", "Publisher", "Publication Year"};
+    JButton jbtn_select = new JButton("검색");
+    JTextField jtxt_search = new JTextField();
+    JPanel jp_north = new JPanel();
+    String[] checknums = {"도서명","작가명","출판사명"};
+    JList jlist = new JList(checknums);
+    
+    LibraryServer ls;
+    
+    
 
-    public LibraryResult() {
-        initDisplay();
+    public LibraryResult(LibraryServer server) {
+    	ls = server;
+       
+        
     }
 
-    public void addDatastoMap(String title, String author, String publisher, int pubyear, String imageUrl) {
-        // 새로운 데이터 맵 생성
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("Title", title);
-        dataMap.put("Author", author);
-        dataMap.put("Publisher", publisher);
-        dataMap.put("Publication Year", pubyear);
-        DataforTable.add(dataMap);
-        // 데이터 추가 후 모델 업데이트
-        updateTableModel();
-    }
 
-    public void updateTableModel() {
-        Object[][] data = new Object[DataforTable.size()][header.length];
-        for (int i = 0; i < DataforTable.size(); i++) {
-            Map<String, Object> rowData = DataforTable.get(i);
-            data[i][0] = rowData.get("Title");
-            data[i][1] = rowData.get("Author");
-            data[i][2] = rowData.get("Publisher");
-            data[i][3] = rowData.get("Publication Year");
+
+    public void updateTableModel(List<Map<String, Object>> list) {
+        Vector<Vector<Object>> data = new Vector<>();
+        for (Map<String, Object> item : list) {
+            Vector<Object> row = new Vector<>();
+            row.add(item.get("title"));
+            row.add(item.get("author"));
+            row.add(item.get("publisher"));
+            row.add(item.get("pubyear"));
+            data.add(row);
         }
-        dtm.setDataVector(data, header);
-    }
+        DefaultTableModel model = (DefaultTableModel) jt.getModel();
 
+        // Clear the current data
+        model.setRowCount(0);
+
+        // Set the new data
+        for (Vector<Object> row : data) {
+            model.addRow(row);
+        }
+    }
+    
     public void initDisplay() {
+    	jp_north.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        
+        // Create a panel for each component
+        JPanel buttonPanel = new JPanel();
+        jbtn_select.setPreferredSize(new Dimension(80, 30)); // Set button size
+        buttonPanel.add(jbtn_select);
+        gbc.gridx = 0;
+        jp_north.add(buttonPanel, gbc);
+        
+        JPanel textFieldPanel = new JPanel();
+        jtxt_search.setPreferredSize(new Dimension(150, 30)); // Set text field size
+        textFieldPanel.add(jtxt_search);
+        gbc.gridx = 1;
+        jp_north.add(textFieldPanel, gbc);
+        
+        JPanel listPanel = new JPanel();
+        listPanel.add(jlist);
+        gbc.gridx = 2;
+        jp_north.add(listPanel, gbc);
+        jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Allow only one item to be selected
+       
         dtm = new DefaultTableModel(new Object[0][], header);
         jt = new JTable(dtm);
+        jbtn_select.addActionListener(this);
+       
+        this.add(jp_north, BorderLayout.NORTH);
         JScrollPane jsp = new JScrollPane(jt);
         Container con = this.getContentPane();
         con.add(jsp, BorderLayout.CENTER);
@@ -53,10 +92,22 @@ public class LibraryResult extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LibraryResult lr = new LibraryResult();
-            lr.addDatastoMap("Sample Book 1", "Sample Author 1", "Sample Publisher 1", 2023, "Image URL 1");
-            lr.addDatastoMap("Sample Book 2", "Sample Author 2", "Sample Publisher 2", 2022, "Image URL 2");
-        });
+    	LibraryServer ls = new LibraryServer();
+       LibraryResult lr = new LibraryResult(ls);
+       lr.initDisplay();
+       
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		if(obj == jbtn_select) {
+            String searchtxt = jtxt_search.getText();
+            int searchnum = jlist.getSelectedIndex();
+            System.out.println(searchnum + searchtxt);
+            List<Map<String, Object>> searchResult = ls.searchInit(searchtxt, searchnum);
+            updateTableModel(searchResult);
+        }
+		
+	}
 }
