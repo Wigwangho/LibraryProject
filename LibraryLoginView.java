@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public class LibraryLoginView extends JFrame implements ActionListener{
 	 private DefaultTableModel dtm;
 	    private JTable jt;
-	    JButton jbtn_login = new JButton("Î°úÍ∑∏Ïù∏");
+	    JButton jbtn_login = new JButton("∑Œ±◊¿Œ");
 	    JTextField jtxt_ID = new JTextField(20); 
 	    JTextField jtxt_pw = new JTextField(20); 
 	    JPanel jp_south = new JPanel();
@@ -64,7 +64,6 @@ public class LibraryLoginView extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		Object obj = e.getSource();
 		if(obj == jbtn_login) {
-			System.out.println("Î°úÍ∑∏Ïù∏");
 			String ID = jtxt_ID.getText();
 			String pw = jtxt_pw.getText();
 			LibraryLoginDAO ld = new LibraryLoginDAO(ID, pw);

@@ -27,26 +27,33 @@ public class LibraryTable extends JFrame implements ActionListener {
 	    private JTable jt;
 	    private Object[][] DataforTable = {};
 	    String[] header = {"Title", "Author", "Publisher", "Publication Year"};
-	    JButton jbtn_select = new JButton("ì¡°íšŒ");
-	    JButton jbtn_delete = new JButton("ì‚­ì œ");
+	    JButton jbtn_select = new JButton("Á¶È¸");
+	    JButton jbtn_delete = new JButton("»èÁ¦");
 	    JTextField jtxt_search = new JTextField();
 	    JPanel jp_south = new JPanel();
-	    String[] checknums = {"ë„ì„œëª…ìœ¼ë¡œ ê²€ìƒ‰","ì‘ê°€ëª…ìœ¼ë¡œ ê²€ìƒ‰","ì¶œíŒì‚¬ëª…ìœ¼ë¡œ ê²€ìƒ‰"};
+	    String[] checknums = {"µµ¼­¸íÀ¸·Î °Ë»ö","ÀÛ°¡¸íÀ¸·Î °Ë»ö","ÃâÆÇ»ç¸íÀ¸·Î °Ë»ö"};
 	    JList jlist = new JList(checknums);
+	    List<Map<String, Object>> searchResult;
 	    
 	    LibraryManipulateServer lms;
-	    
+		LibraryServer ls = new LibraryServer();			        
+		LibraryResult lr = new LibraryResult(ls);
+		
 	    
 
 	    public LibraryTable(LibraryManipulateServer server) {
-	    	lms = server;
-	       
-	        
+			// TODO Auto-generated constructor stub
+	    	this.lms = server;
+		}
+
+		public void setLibraryTable(LibraryResult libraryResult) {
+	        this.lr = libraryResult;
 	    }
 
-
-
 	    public void updateTableModel(List<Map<String, Object>> list) {
+	    	DefaultTableModel model = (DefaultTableModel) jt.getModel();
+	    	// Clear the current data
+	        model.setRowCount(0);
 	        Vector<Vector<Object>> data = new Vector<>();
 	        for (Map<String, Object> item : list) {
 	            Vector<Object> row = new Vector<>();
@@ -56,16 +63,13 @@ public class LibraryTable extends JFrame implements ActionListener {
 	            row.add(item.get("pubyear"));
 	            data.add(row);
 	        }
-	        DefaultTableModel model = (DefaultTableModel) jt.getModel();
-
-	        // Clear the current data
 	        
 
 	        // Set the new data
 	        for (Vector<Object> row : data) {
 	            model.addRow(row);
 	        }
-	        model.setRowCount(0);
+	        dtm = model;
 	    }
 
 	    public void initDisplay() {
@@ -115,39 +119,34 @@ public class LibraryTable extends JFrame implements ActionListener {
 
 		@Override
 			public void actionPerformed(ActionEvent e) {
-			    Object obj = e.getSource();
-			    if (obj == jbtn_select) {
-			        String searchtxt = jtxt_search.getText();
+			Object obj = e.getSource();
+		    	if(obj == jbtn_select) {
+					String searchtxt = jtxt_search.getText();
 			        int searchnum = jlist.getSelectedIndex();
-			        System.out.println(searchnum + searchtxt);
-			        List<Map<String, Object>> searchResult = lms.searchInit(searchtxt, searchnum);
-			        updateTableModel(searchResult);
-			    } 
-			        else if (obj == jbtn_delete) {
-			            int selectedRow = jt.getSelectedRow();
-			            if (selectedRow >= 0) {
-			                String title = (String) dtm.getValueAt(selectedRow, 0);
-			                System.out.println(title);
 
-			                // ì—¬ê¸°ì—ì„œ ì„ íƒëœ í–‰ì„ ì‚­ì œí•œ í›„ í•„ìš”í•œ ì‘ì—…ì„ ìˆ˜í–‰í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤
-			                LibraryLoginDAO lld = new LibraryLoginDAO(title);
-			                if(lld.yes == 1) {
-			                JOptionPane.showMessageDialog(null, "ì‚­ì œì— ì„±ê³µí–ˆìŠµë‹ˆë‹¤..", "deleted", JOptionPane.INFORMATION_MESSAGE);
-			                String searchtxt = jtxt_search.getText();
-			                int searchnum = jlist.getSelectedIndex();
-			                List<Map<String, Object>> searchResult = lms.searchInit(searchtxt, searchnum);
-			                updateTableModel(searchResult);
-			                
-			                }
-			                else {
-			                	JOptionPane.showMessageDialog(null, "ì‚­ì œì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤..", "can't deleted", JOptionPane.WARNING_MESSAGE);	
-			                }
-			            } else {
-			                System.out.println("í–‰ì„ ì„ íƒí•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
-			            }
-			            //insert here
-			        } 
-			        
+			     
+					searchResult = ls.searchInit(searchtxt, searchnum);
+			        updateTableModel(searchResult);
+		    } else if (obj == jbtn_delete) {
+		        int selectedRow = jt.getSelectedRow();
+		        if (selectedRow >= 0) {
+		            String title = (String) dtm.getValueAt(selectedRow, 0);
+		            System.out.println(title);
+
+		            // ¿©±â¿¡¼­ ¼±ÅÃµÈ ÇàÀ» »èÁ¦ÇÑ ÈÄ ÇÊ¿äÇÑ ÀÛ¾÷À» ¼öÇàÇÒ ¼ö ÀÖ½À´Ï´Ù
+		            LibraryLoginDAO lld = new LibraryLoginDAO(title);
+		            if (lld.yes == 1) {
+		                JOptionPane.showMessageDialog(null, "»èÁ¦¿¡ ¼º°øÇß½À´Ï´Ù.", "deleted", JOptionPane.INFORMATION_MESSAGE);
+		                
+		                List<Map<String, Object>> searchResult = lms.searchInit();
+		                updateTableModel(searchResult);
+		            } else {
+		                JOptionPane.showMessageDialog(null, "»èÁ¦¿¡ ½ÇÆĞÇß½À´Ï´Ù.", "can't deleted", JOptionPane.WARNING_MESSAGE);
+		            }
+		        } else {
+		            System.out.println("ÇàÀ» ¼±ÅÃÇÏÁö ¾Ê¾Ò½À´Ï´Ù.");
+		        }
+		    }
 			        
 			    
 }

@@ -12,46 +12,25 @@ import java.util.Vector;
 
 import com.util.DBConnectionMgr;
 
-public class LibraryServer{
-	
+public class LibraryManipulateServer {
 	DBConnectionMgr dbMgr = null; 
 	Connection con = null;
 	PreparedStatement pstmt =null;
 	ResultSet rs = null;
 	Vector<Object> v = null;
 	List<Map<String,Object>> list = new ArrayList<>();
-
-	private LibraryResult libraryResult; // Add a reference to LibraryResult
-
-    public void setLibraryResult(LibraryResult libraryResult) {
-        this.libraryResult = libraryResult;
-    }
-
-	public void LibraryAct(String bname, int selectedNum) {
+	LibraryTable lr;
+	private LibraryTable libraryTable;
+	
+	public void LibraryAct() {
 		
-		StringBuilder sql = new StringBuilder();
+		String sql = "select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE";
 		
-		
-	switch (selectedNum) {
-	case -1:
-		sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_TITLE like '%'||?||'%'");
-        break;
-    case 0:
-        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_TITLE like '%'||?||'%'");
-        break;
-    case 1:
-        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_AUTHOR like '%'||?||'%'");
-        break;
-    case 2:
-        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where PUBLISHER like '%'||?||'%'");
-        break;
-}
-		//
+	
 		dbMgr = DBConnectionMgr.getInstance();
 		try {
 			con = dbMgr.getConnection();//臾쇰━�쟻�쑝濡� �뼥�뼱�졇 �엳�뒗 �꽌踰꾩� �뿰寃고넻濡� �솗蹂�
 			pstmt = con.prepareStatement(sql.toString());//荑쇰━臾몄쓣 癒쇱� �뒪罹뷀븯�뿬 �엳�쓣 吏� 紐⑤Ⅴ�뒗 蹂��닔�쓽 �옄由щ�� 移섑솚�븷寃�.
-			pstmt.setString(1, bname);
 			rs = pstmt.executeQuery();
 			
 			Map<String,Object> rmap = null;
@@ -77,7 +56,6 @@ public class LibraryServer{
 			        v.add(4, map.get("imgUrl"));
 			  
 			}//*/
-			System.out.println("DB 접속 및 데이터 접근 성공");
 		} catch (SQLException se) {
 			System.out.println(sql.toString());//異쒕젰�맂 荑쇰━臾몄쓣 媛덈Т由ы빐�꽌 �넗�뱶�뿉�꽌 �솗�씤�빐 蹂쇨쾬.
 			System.out.println(se.getMessage());
@@ -88,23 +66,25 @@ public class LibraryServer{
 
 
 
+public void LibraryAdd(String GotTxt) {
+	String sql = "INSERT INTO BOOK_TABLE (BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S) VALUE (?,?,?,?,?)";
+}
 
 
 
-
-	public List<Map<String, Object>> searchInit(String gotTxt, int checkednum) {
+	public List<Map<String,Object>> searchInit() {
 		System.out.println("검색 시작");
 
 	    this.list = new ArrayList<>(); // 초기화
 
-	    if (libraryResult == null) {
-	        libraryResult = new LibraryResult(this);
-	        libraryResult.initDisplay();
+	    if (libraryTable == null) {
+	    	libraryTable = new LibraryTable(this);
+	    	libraryTable.initDisplay();
 	    }
 
-	    this.LibraryAct(gotTxt, checkednum); // 검색 결과를 this.list에 설정
-	    libraryResult.updateTableModel(this.list);
-	    libraryResult.setVisible(true); // Ensure the LibraryResult window is visible
+	    this.LibraryAct(); // 검색 결과를 this.list에 설정
+	    libraryTable.updateTableModel(this.list);
+	    libraryTable.setVisible(true); // Ensure the LibraryResult window is visible
 
 	    List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
 	    for (int s = 0; s < this.list.size(); s++) {
@@ -118,13 +98,5 @@ public class LibraryServer{
 	    }
 	    return this.list;
 	
-	}
-		
-		
-	
-
-
-	
-
 }
-
+}
