@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import com.util.DBConnectionMgr;
 
 public class LibraryManipulateServer {
@@ -66,8 +68,33 @@ public class LibraryManipulateServer {
 
 
 
-public void LibraryAdd(String GotTxt) {
-	String sql = "INSERT INTO BOOK_TABLE (BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S) VALUE (?,?,?,?,?)";
+public void LibraryAdd(String title, String author, String pubyear, String publisher, String imgurl) {
+	String sql = "INSERT INTO BOOK_TABLE (BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S) VALUES (?,?,?,?,?)";
+
+	dbMgr = DBConnectionMgr.getInstance();
+	try {
+		con = dbMgr.getConnection();//臾쇰━�쟻�쑝濡� �뼥�뼱�졇 �엳�뒗 �꽌踰꾩� �뿰寃고넻濡� �솗蹂�
+		pstmt = con.prepareStatement(sql.toString());//荑쇰━臾몄쓣 癒쇱� �뒪罹뷀븯�뿬 �엳�쓣 吏� 紐⑤Ⅴ�뒗 蹂��닔�쓽 �옄由щ�� 移섑솚�븷寃�.
+		pstmt.setString(1, title);
+		pstmt.setString(2, author);
+		pstmt.setString(3, pubyear);
+		pstmt.setString(4, publisher);
+		pstmt.setString(5, imgurl);
+		rs = pstmt.executeQuery();
+		int rowsDeleted = pstmt.executeUpdate();
+		if(rowsDeleted>0) {
+			JOptionPane.showMessageDialog(null, "성공적으로 추가하였습니다.", "성공!", JOptionPane.INFORMATION_MESSAGE);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "추가에 실패하였습니다.", "실패!", JOptionPane.ERROR_MESSAGE);
+		}
+	}catch(SQLException se) {
+		System.out.println(sql.toString());//異쒕젰�맂 荑쇰━臾몄쓣 媛덈Т由ы빐�꽌 �넗�뱶�뿉�꽌 �솗�씤�빐 蹂쇨쾬.
+		System.out.println(se.getMessage());
+	} catch (Exception e) {
+		
+	}
+
 }
 
 

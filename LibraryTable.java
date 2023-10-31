@@ -29,6 +29,7 @@ public class LibraryTable extends JFrame implements ActionListener {
 	    String[] header = {"Title", "Author", "Publisher", "Publication Year"};
 	    JButton jbtn_select = new JButton("조회");
 	    JButton jbtn_delete = new JButton("삭제");
+	    JButton jbtn_addframe = new JButton("추가");
 	    JTextField jtxt_search = new JTextField();
 	    JPanel jp_south = new JPanel();
 	    String[] checknums = {"도서명으로 검색","작가명으로 검색","출판사명으로 검색"};
@@ -38,6 +39,7 @@ public class LibraryTable extends JFrame implements ActionListener {
 	    LibraryManipulateServer lms;
 		LibraryServer ls = new LibraryServer();			        
 		LibraryResult lr = new LibraryResult(ls);
+		LibraryAdd la;
 		
 	    
 
@@ -75,43 +77,49 @@ public class LibraryTable extends JFrame implements ActionListener {
 	    public void initDisplay() {
 	    	jp_south.setLayout(new GridBagLayout());
 	        GridBagConstraints gbc = new GridBagConstraints();
-	        
-	        // Create a panel for each component
+
+	        // 각 컴포넌트를 위한 패널 생성
 	        JPanel textFieldPanel = new JPanel();
-	        jtxt_search.setPreferredSize(new Dimension(150, 30)); // Set text field size
+	        jtxt_search.setPreferredSize(new Dimension(200, 30)); // 텍스트 필드 크기 설정
 	        textFieldPanel.add(jtxt_search);
 	        gbc.gridx = 1;
 	        jp_south.add(textFieldPanel, gbc);
-	        
+
 	        JPanel buttonPanel = new JPanel();
-	        jbtn_select.setPreferredSize(new Dimension(80, 30)); // Set button size
+	        jbtn_select.setPreferredSize(new Dimension(100, 30)); // 버튼 크기 설정
 	        buttonPanel.add(jbtn_select);
 	        gbc.gridx = 0;
 	        jp_south.add(buttonPanel, gbc);
-	      
-	        
+
 	        JPanel listPanel = new JPanel();
 	        listPanel.add(jlist);
 	        gbc.gridx = 2;
 	        jp_south.add(listPanel, gbc);
-	        jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Allow only one item to be selected
-	       
-	        JPanel loginbuttonPanel = new JPanel();
-	        jbtn_delete.setPreferredSize(new Dimension(80, 30)); // Set button size
-	        buttonPanel.add(jbtn_delete);
+	        jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // 하나의 아이템만 선택 가능하도록 설정
+
+	        JPanel AddbuttonPanel = new JPanel();
+	        jbtn_addframe.setPreferredSize(new Dimension(100, 30)); // 버튼 크기 설정
+	        AddbuttonPanel.add(jbtn_addframe);
 	        gbc.gridx = 3;
-	        jp_south.add(loginbuttonPanel, gbc);
-	        
+	        jp_south.add(AddbuttonPanel, gbc);
+
+	        JPanel deletebuttonPanel = new JPanel();
+	        jbtn_delete.setPreferredSize(new Dimension(100, 30)); // 버튼 크기 설정
+	        deletebuttonPanel.add(jbtn_delete);
+	        gbc.gridx = 4;
+	        jp_south.add(deletebuttonPanel, gbc);
+
 	        dtm = new DefaultTableModel(new Object[0][], header);
 	        jt = new JTable(dtm);
 	        jbtn_select.addActionListener(this);
 	        jbtn_delete.addActionListener(this);
-	       
+	        jbtn_addframe.addActionListener(this);
+
 	        this.add(jp_south, BorderLayout.SOUTH);
 	        JScrollPane jsp = new JScrollPane(jt);
 	        Container con = this.getContentPane();
 	        con.add(jsp, BorderLayout.CENTER);
-	        this.setSize(500, 300);
+	        this.setSize(800, 400); // 필요한대로 프레임 크기를 조정하세요
 	        this.setVisible(true);
 	    }
 
@@ -146,6 +154,10 @@ public class LibraryTable extends JFrame implements ActionListener {
 		        } else {
 		            System.out.println("행을 선택하지 않았습니다.");
 		        }
+		    }
+		    else if(obj == jbtn_addframe) {
+		    	la = new LibraryAdd();
+		    	la.initDisplay();
 		    }
 			        
 			    
