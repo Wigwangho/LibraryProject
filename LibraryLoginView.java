@@ -67,6 +67,7 @@ public class LibraryLoginView extends JFrame implements ActionListener{
 			String ID = jtxt_ID.getText();
 			String pw = jtxt_pw.getText();
 			LibraryLoginDAO ld = new LibraryLoginDAO(ID, pw);
+			dispose();
 		}
 	}
 

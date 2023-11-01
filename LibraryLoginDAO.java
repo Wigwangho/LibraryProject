@@ -18,55 +18,8 @@ public class LibraryLoginDAO {
 	LibraryManipulateServer server = new LibraryManipulateServer();
 	int yes = 0;
 	
-	 public boolean deleteBook(int yes) {
-	        // Delete the book with the given title from the database
-	        // If deletion is successful, return true; otherwise, return false
-	        if (yes == 1) {
-	            return true;
-	        } else {
-	            return false;
-	        }
-	    }
-	public LibraryLoginDAO(String title) {
-	    try {
-	        dbMgr = DBConnectionMgr.getInstance();
-	        con = dbMgr.getConnection();
-	        con.setAutoCommit(false); // 수동 커밋 모드 설정
+	
 
-	        String SQL = "DELETE FROM book_table WHERE book_title=?";
-	        pstmt = con.prepareStatement(SQL);
-	        pstmt.setString(1, title);
-	        int rowsDeleted = pstmt.executeUpdate();
-
-	        if (rowsDeleted > 0) {
-	            System.out.println("삭제 성공");
-	            con.commit(); // 커밋
-	            yes = 1;
-	        } else {
-	            System.out.println("해당 도서를 찾을 수 없습니다.");
-	        }
-
-	    } catch (SQLException se) {
-	        System.out.println(se.getMessage());
-	        try {
-	            if (con != null) {
-	                con.rollback(); // 롤백
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    } finally {
-	        try {
-	            if (pstmt != null) pstmt.close();
-	            if (con != null) {
-	                con.setAutoCommit(true); // 다시 자동 커밋 모드로 변경
-	                dbMgr.freeConnection(null, con);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	}
 	    LibraryLoginDAO(String ID, String password) {
 	        try {
 	            dbMgr = DBConnectionMgr.getInstance();

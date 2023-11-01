@@ -144,10 +144,10 @@ public class LibraryTable extends JFrame implements ActionListener {
 		        if (selectedRow >= 0) {
 		            String title = (String) dtm.getValueAt(selectedRow, 0);
 		            System.out.println(title);
-
+		            lms.book_Delete(title);
 		            // 여기에서 선택된 행을 삭제한 후 필요한 작업을 수행할 수 있습니다
 		           
-		            if (lms.deleteBook(selectedRow)) {
+		            if (lms.yes == 1) {
 		                JOptionPane.showMessageDialog(null, "삭제에 성공했습니다.", "deleted", JOptionPane.INFORMATION_MESSAGE);
 		                
 		                List<Map<String, Object>> searchResult = lms.searchInit();

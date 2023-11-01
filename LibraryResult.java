@@ -113,7 +113,7 @@ public class LibraryResult extends JFrame implements ActionListener {
 	       
         }
 		else if(obj == jbtn_login) {
-			
+			dispose();
 			lv.initDisplay();
 		}
 		
