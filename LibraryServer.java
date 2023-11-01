@@ -21,11 +21,6 @@ public class LibraryServer{
 	Vector<Object> v = null;
 	List<Map<String,Object>> list = new ArrayList<>();
 
-	private LibraryResult libraryResult; // Add a reference to LibraryResult
-
-    public void setLibraryResult(LibraryResult libraryResult) {
-        this.libraryResult = libraryResult;
-    }
 
 	public void LibraryAct(String bname, int selectedNum) {
 		
@@ -97,14 +92,9 @@ public class LibraryServer{
 
 	    this.list = new ArrayList<>(); // 초기화
 
-	    if (libraryResult == null) {
-	        libraryResult = new LibraryResult(this);
-	        libraryResult.initDisplay();
-	    }
 
 	    this.LibraryAct(gotTxt, checkednum); // 검색 결과를 this.list에 설정
-	    libraryResult.updateTableModel(this.list);
-	    libraryResult.setVisible(true); // Ensure the LibraryResult window is visible
+	   
 
 	    List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
 	    for (int s = 0; s < this.list.size(); s++) {
@@ -116,12 +106,12 @@ public class LibraryServer{
 	        map.put("imgurl", (String) this.list.get(s).get("imgurl"));
 	        list1.add(map);
 	    }
+	    list = list1;
 	    return this.list;
 	
 	}
 		
 		
-	
 
 
 	

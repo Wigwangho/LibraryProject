@@ -24,27 +24,9 @@ public class LibraryResult extends JFrame implements ActionListener {
     String[] checknums = {"도서명으로 검색","작가명으로 검색","출판사명으로 검색"};
     JList jlist = new JList(checknums);
     List<Map<String, Object>> searchResult;
-    LibraryServer ls;
 
-    LibraryResult(LibraryServer server) {
-        ls = server;
-        ls.setLibraryResult(this); // Server에게 LibraryResult 인스턴스를 설정
-    }
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
+    LibraryLoginView lv = new LibraryLoginView();
+    LibraryServer ls = new LibraryServer();
 
 
 	public void updateTableModel(List<Map<String, Object>> list) {
@@ -131,9 +113,13 @@ public class LibraryResult extends JFrame implements ActionListener {
 	       
         }
 		else if(obj == jbtn_login) {
-			LibraryLoginView lv = new LibraryLoginView();
+			
 			lv.initDisplay();
 		}
 		
+	}
+	public static void main(String[] args) {
+		LibraryResult lr = new LibraryResult();
+		lr.initDisplay();
 	}
 }

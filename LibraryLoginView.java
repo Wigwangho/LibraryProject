@@ -55,8 +55,8 @@ public class LibraryLoginView extends JFrame implements ActionListener{
 	    }
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		LibraryLoginView lv = new LibraryLoginView();
-		lv.initDisplay();
+		//LibraryLoginView lv = new LibraryLoginView();
+		//lv.initDisplay();
 	}
 
 	@Override

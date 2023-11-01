@@ -7,6 +7,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -38,8 +40,7 @@ public class LibraryTable extends JFrame implements ActionListener {
 	    
 	    LibraryManipulateServer lms;
 		LibraryServer ls = new LibraryServer();			        
-		LibraryResult lr = new LibraryResult(ls);
-		LibraryAdd la;
+		LibraryAdd la = new LibraryAdd();
 		
 	    
 
@@ -48,9 +49,6 @@ public class LibraryTable extends JFrame implements ActionListener {
 	    	this.lms = server;
 		}
 
-		public void setLibraryTable(LibraryResult libraryResult) {
-	        this.lr = libraryResult;
-	    }
 
 	    public void updateTableModel(List<Map<String, Object>> list) {
 	    	DefaultTableModel model = (DefaultTableModel) jt.getModel();
@@ -120,6 +118,12 @@ public class LibraryTable extends JFrame implements ActionListener {
 	        Container con = this.getContentPane();
 	        con.add(jsp, BorderLayout.CENTER);
 	        this.setSize(800, 400); // 필요한대로 프레임 크기를 조정하세요
+	        addWindowListener(new WindowAdapter() {
+	            @Override
+	            public void windowClosing(WindowEvent e) {
+	                System.exit(0);
+	            }
+	        });
 	        this.setVisible(true);
 	    }
 
@@ -142,8 +146,8 @@ public class LibraryTable extends JFrame implements ActionListener {
 		            System.out.println(title);
 
 		            // 여기에서 선택된 행을 삭제한 후 필요한 작업을 수행할 수 있습니다
-		            LibraryLoginDAO lld = new LibraryLoginDAO(title);
-		            if (lld.yes == 1) {
+		           
+		            if (lms.deleteBook(selectedRow)) {
 		                JOptionPane.showMessageDialog(null, "삭제에 성공했습니다.", "deleted", JOptionPane.INFORMATION_MESSAGE);
 		                
 		                List<Map<String, Object>> searchResult = lms.searchInit();
@@ -156,7 +160,7 @@ public class LibraryTable extends JFrame implements ActionListener {
 		        }
 		    }
 		    else if(obj == jbtn_addframe) {
-		    	la = new LibraryAdd();
+		    	
 		    	la.initDisplay();
 		    }
 			        

@@ -21,8 +21,8 @@ public class LibraryManipulateServer {
 	ResultSet rs = null;
 	Vector<Object> v = null;
 	List<Map<String,Object>> list = new ArrayList<>();
-	LibraryTable lr;
-	private LibraryTable libraryTable;
+    
+
 	
 	public void LibraryAct() {
 		
@@ -68,26 +68,28 @@ public class LibraryManipulateServer {
 
 
 
-public void LibraryAdd(String title, String author, String pubyear, String publisher, String imgurl) {
-	String sql = "INSERT INTO BOOK_TABLE (BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S) VALUES (?,?,?,?,?)";
+public void LibraryAdd(String isbn, String title, String author, String pubyear, String publisher, String imgurl) {
+	String sql = "INSERT INTO BOOK_TABLE (ISBN, BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S) VALUES (?,?,?,?,?,?)";
 
 	dbMgr = DBConnectionMgr.getInstance();
 	try {
 		con = dbMgr.getConnection();//臾쇰━�쟻�쑝濡� �뼥�뼱�졇 �엳�뒗 �꽌踰꾩� �뿰寃고넻濡� �솗蹂�
 		pstmt = con.prepareStatement(sql.toString());//荑쇰━臾몄쓣 癒쇱� �뒪罹뷀븯�뿬 �엳�쓣 吏� 紐⑤Ⅴ�뒗 蹂��닔�쓽 �옄由щ�� 移섑솚�븷寃�.
-		pstmt.setString(1, title);
-		pstmt.setString(2, author);
-		pstmt.setString(3, pubyear);
-		pstmt.setString(4, publisher);
-		pstmt.setString(5, imgurl);
-		rs = pstmt.executeQuery();
-		int rowsDeleted = pstmt.executeUpdate();
-		if(rowsDeleted>0) {
-			JOptionPane.showMessageDialog(null, "성공적으로 추가하였습니다.", "성공!", JOptionPane.INFORMATION_MESSAGE);
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "추가에 실패하였습니다.", "실패!", JOptionPane.ERROR_MESSAGE);
-		}
+		pstmt.setString(1, isbn);
+		pstmt.setString(2, title);
+		pstmt.setString(3, author);
+		pstmt.setString(4, pubyear);
+		pstmt.setString(5, publisher);
+		pstmt.setString(6, imgurl);
+
+		System.out.println("데이터 삽입함");
+		 int rowsInserted = pstmt.executeUpdate(); // Use rowsInserted instead of rowsDeleted
+	        if (rowsInserted > 0) { // Check if rows were successfully inserted
+	            JOptionPane.showMessageDialog(null, "성공적으로 추가하였습니다.", "성공!", JOptionPane.INFORMATION_MESSAGE);
+	            list.clear(); // Clear the list to avoid duplicates
+	        } else {
+	            JOptionPane.showMessageDialog(null, "추가에 실패하였습니다.", "실패!", JOptionPane.ERROR_MESSAGE);
+	        }
 	}catch(SQLException se) {
 		System.out.println(sql.toString());//異쒕젰�맂 荑쇰━臾몄쓣 媛덈Т由ы빐�꽌 �넗�뱶�뿉�꽌 �솗�씤�빐 蹂쇨쾬.
 		System.out.println(se.getMessage());
@@ -96,7 +98,15 @@ public void LibraryAdd(String title, String author, String pubyear, String publi
 	}
 
 }
-
+public boolean deleteBook(int yes) {
+    // Delete the book with the given title from the database
+    // If deletion is successful, return true; otherwise, return false
+    if (yes == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 
 	public List<Map<String,Object>> searchInit() {
@@ -104,14 +114,6 @@ public void LibraryAdd(String title, String author, String pubyear, String publi
 
 	    this.list = new ArrayList<>(); // 초기화
 
-	    if (libraryTable == null) {
-	    	libraryTable = new LibraryTable(this);
-	    	libraryTable.initDisplay();
-	    }
-
-	    this.LibraryAct(); // 검색 결과를 this.list에 설정
-	    libraryTable.updateTableModel(this.list);
-	    libraryTable.setVisible(true); // Ensure the LibraryResult window is visible
 
 	    List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
 	    for (int s = 0; s < this.list.size(); s++) {
