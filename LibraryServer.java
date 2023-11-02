@@ -29,16 +29,16 @@ public class LibraryServer{
 		
 	switch (selectedNum) {
 	case -1:
-		sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_TITLE like '%'||?||'%'");
+		sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where upper(BOOK_TITLE) like upper('%'||?||'%')");
         break;
     case 0:
-        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_TITLE like '%'||?||'%'");
+        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where upper(BOOK_TITLE) like upper('%'||?||'%')");
         break;
     case 1:
-        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where BOOK_AUTHOR like '%'||?||'%'");
+        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where upper(BOOK_AUTHOR) like upper('%'||?||'%')");
         break;
     case 2:
-        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where PUBLISHER like '%'||?||'%'");
+        sql.append("select BOOK_TITLE, BOOK_AUTHOR, YEAR_OF_PUBLICATION, PUBLISHER, IMAGE_URL_S from BOOK_TABLE where upper(PUBLISHER) like upper('%'||?||'%')");
         break;
 }
 		//

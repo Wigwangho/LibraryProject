@@ -23,6 +23,7 @@ public class LibraryLoginView extends JFrame implements ActionListener{
 	    JTextField jtxt_pw = new JTextField(20); 
 	    JPanel jp_south = new JPanel();
 	    JPanel jp_center = new JPanel();
+	    LibraryLoginDAO libraryloginDAO = new LibraryLoginDAO();
 	    public void initDisplay() {
 	    	 jp_south.setLayout(new GridBagLayout());
 	         jp_center.setLayout(new GridBagLayout());
@@ -53,20 +54,16 @@ public class LibraryLoginView extends JFrame implements ActionListener{
 	        this.setSize(400, 200); // Adjusted the height
 	        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    }
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//LibraryLoginView lv = new LibraryLoginView();
-		//lv.initDisplay();
-	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+
 		Object obj = e.getSource();
 		if(obj == jbtn_login) {
 			String ID = jtxt_ID.getText();
 			String pw = jtxt_pw.getText();
-			LibraryLoginDAO ld = new LibraryLoginDAO(ID, pw);
+			libraryloginDAO.Login(ID, pw);
 			dispose();
 		}
 	}
